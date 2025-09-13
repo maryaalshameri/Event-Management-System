@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('ticket_types', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->enum('type', ['regular', 'vip', 'premium']);
             $table->decimal('price', 10, 2)->default(0);
             $table->unsignedInteger('quantity')->default(0); // الكمية الكاملة
