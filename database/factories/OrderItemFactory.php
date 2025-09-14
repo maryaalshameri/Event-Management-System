@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Order;
-use App\Models\Ticket_type;
+use App\Models\TicketType;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 /**
@@ -24,7 +24,7 @@ class OrderItemFactory extends Factory
         
         return [
             'order_id' => Order::factory(),
-            'ticket_type_id' => Ticket_type::factory(),
+            'ticket_type_id' => TicketType::factory(),
             'quantity' => $quantity,
             'price' => $price,
         ];
