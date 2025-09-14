@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Factories;
-use App\Models\Order_item;
+use App\Models\OrderItem;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +19,7 @@ class TicketFactory extends Factory
  public function definition(): array
     {
         return [
-            'order_item_id' => Order_item::factory(),
+            'order_item_id' => OrderItem::factory(),
             'code' => $this->faker->unique()->regexify('[A-Z0-9]{12}'),
             'pdf_path' => $this->faker->filePath(),
             'qr_path' => $this->faker->filePath(),
