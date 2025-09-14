@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Event;
-use App\Models\Ticket_type;
+use App\Models\TicketType;
+use Illuminate\Database\Seeder;
+
 class TicketTypeSeeder extends Seeder
 {
     /**
@@ -17,19 +18,19 @@ class TicketTypeSeeder extends Seeder
 
         foreach ($events as $event) {
             // إنشاء أنواع تذاكر مختلفة لكل فعالية
-            Ticket_type::factory()->regular()->create([
+            TicketType::factory()->regular()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(50, 200),
                 'sold' => rand(0, 50)
             ]);
 
-            Ticket_type::factory()->vip()->create([
+            TicketType::factory()->vip()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(20, 50),
                 'sold' => rand(0, 20)
             ]);
 
-            Ticket_type::factory()->premium()->create([
+            TicketType::factory()->premium()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(10, 30),
                 'sold' => rand(0, 10)

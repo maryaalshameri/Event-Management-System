@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Order_item;
+use App\Models\OrderItem;
 use App\Models\Ticket;
+use Illuminate\Database\Seeder;
+
 class TicketSeeder extends Seeder
 {
     /**
@@ -13,7 +14,7 @@ class TicketSeeder extends Seeder
      */
     public function run(): void
     {
-        $orderItems = Order_item::all();
+        $orderItems = OrderItem::all();
 
         foreach ($orderItems as $orderItem) {
             // إنشاء تذاكر حسب الكمية في orderItem
