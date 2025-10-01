@@ -134,6 +134,8 @@ class EventController extends Controller
             ]);
         }
 
+       
+       
         // إزالة حساب السعة التلقائية لأنها تأتي من الفرونت
         // $totalCapacity = array_sum(array_column($request->ticket_types, 'quantity'));
         // $event->update(['capacity' => $totalCapacity]);
