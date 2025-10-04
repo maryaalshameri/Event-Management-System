@@ -21,6 +21,12 @@ class AdminController extends Controller
             'total_orders' => Order::count(),
             'total_revenue' => Order::where('payment_status', 'completed')->sum('total_amount'),
             'pending_orders' => Order::where('payment_status', 'pending')->count(),
+             'activeUsers' => User::where('role', 'attendee')->count(),
+            'upcomingEvents' => Event::where('start_date', '>', now())->count(),
+            'newOrders' => Order::whereDate('created_at', today())->count(),
+            'todayRevenue' => Order::whereDate('created_at', today())
+                          ->where('payment_status', 'completed')
+                          ->sum('total_amount')
         ];
 
         return response()->json($stats);
