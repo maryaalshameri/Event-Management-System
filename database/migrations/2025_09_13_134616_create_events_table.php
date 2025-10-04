@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8)->nullable();
             $table->integer('capacity')->default(0);
             $table->string('category');
-            $table->integer('available_seats');
+            // $table->integer('available_seats');
             $table->decimal('price', 8, 2)->default(0);
             $table->string('image')->nullable();
             $table->enum('status', ['draft', 'published', 'cancelled', 'completed'])->default('draft');

@@ -32,7 +32,6 @@ public function definition(): array
             'longitude' => $this->faker->longitude(),
             'capacity' => $this->faker->numberBetween(50, 500),
             'category' => $this->faker->randomElement(['concert', 'conference', 'workshop', 'sports', 'festival']),
-            'available_seats' => fn (array $attributes) => $attributes['capacity'],
             'price' => $this->faker->randomFloat(2, 0, 500),
             'image' => $this->faker->imageUrl(640, 480, 'events'),
             'status' => $this->faker->randomElement(['draft', 'published', 'cancelled', 'completed']),

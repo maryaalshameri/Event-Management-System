@@ -21,18 +21,23 @@ class TicketTypeSeeder extends Seeder
             TicketType::factory()->regular()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(50, 200),
-                'sold' => rand(0, 50)
+                'available' => rand(0, 1),
+                'description' => 'تذكرة عادية مع دخول قياسي', // نص وليس 0 أو 1                'sold' => rand(0, 50)
             ]);
 
             TicketType::factory()->vip()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(20, 50),
+                'available' => rand(0, 1),
+                'description' => 'تذكرة VIP مع مميزات خاصة',
                 'sold' => rand(0, 20)
             ]);
 
             TicketType::factory()->premium()->create([
                 'event_id' => $event->id,
                 'quantity' => rand(10, 30),
+                'available' => rand(0, 1),
+                 'description' => 'تذكرة بريميوم مع أفضل المقاعد',
                 'sold' => rand(0, 10)
             ]);
         }
