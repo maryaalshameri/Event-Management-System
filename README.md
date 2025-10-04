@@ -1,61 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Backend Setup
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This README explains how to set up and configure the backend using **Laravel** with **Sanctum** for API authentication and additional useful packages.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Create New Laravel Project
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```sh
+composer create-project laravel/laravel ./
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This command installs a fresh Laravel application in the current directory.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 2. Install Sanctum (API Authentication)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```sh
+composer require laravel/sanctum
+php artisan install:api
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* `laravel/sanctum`: Package for API token authentication.
+* `install:api`: Installs basic API scaffolding.
+* `vendor:publish`: Publishes Sanctum config and migration files.
+* `migrate`: Runs database migrations (creates tables for users, tokens, etc.).
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 3. File Storage Linking
 
-### Premium Partners
+```sh
+php artisan storage:link
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Creates a symbolic link between `public/storage` and `storage/app/public` so uploaded files can be accessed via the browser.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 4. Database Seeding
 
-## Code of Conduct
+```sh
+php artisan db:seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Seeds the database with initial test data defined in `DatabaseSeeder`.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 5. Queue Worker
 
-## License
+```sh
+php artisan queue:work
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Starts processing queued jobs (for emails, notifications, etc.).
+
+---
+
+## 6. Composer & Artisan Maintenance Commands
+
+```sh
+composer dump-autoload
+php artisan config:clear
+php artisan optimize:clear
+php artisan key:generate
+```
+
+* **dump-autoload**: Regenerates Composer autoloader (after adding new classes).
+* **config:clear**: Clears cached configuration.
+* **optimize:clear**: Clears all cached files (routes, config, views).
+* **key:generate**: Generates a new application key for encryption.
+
+---
+
+## 7. Additional Composer Packages
+
+```sh
+composer require endroid/qr-code
+composer require simplesoftwareio/simple-qrcode
+composer require fruitcake/laravel-cors
+composer require barryvdh/laravel-dompdf
+```
+
+* **endroid/qr-code**: Generate QR codes in PHP.
+* **simple-qrcode**: Laravel wrapper for QR code generation.
+* **fruitcake/laravel-cors**: Handles Cross-Origin Resource Sharing (CORS) for API requests.
+* **barryvdh/laravel-dompdf**: Generate PDFs from Blade templates.
+
+---
+
+## 8. API Authentication & Sanctum
+
+### How it Works:
+
+* When a user registers or logs in, the backend issues a **token**.
+* This token must be included in every API request header as:
+
+  ```
+  Authorization: Bearer <token>
+  ```
+* Sanctum validates the token and ensures the request is authenticated.
+
+### Endpoints Overview:
+
+* **Register (`POST /api/register`)** → create new user, return token & user info.
+* **Login (`POST /api/login`)** → authenticate user, return token & user info.
+* **User Info (`GET /api/user`)** → get details of the authenticated user.
+* **Logout (`POST /api/logout`)** → revoke current token.
+
+### Error Handling:
+
+* If token is missing or invalid → **401 Unauthorized**.
+* Validation errors (e.g., invalid email/password) → **422 Unprocessable Entity**.
+
+---
+
+## 9. Notes
+
+* Make sure `.env` file is properly configured with **database connection**, **queue driver**, and **storage settings**.
+* Run `php artisan serve` to start the development server.
+* Run migrations whenever new tables are added.
+* Always clear caches (`php artisan optimize:clear`) after config or route changes.
+
+---
