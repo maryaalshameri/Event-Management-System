@@ -31,7 +31,7 @@ class UserRegistered extends Notification implements ShouldQueue
             ->greeting('مرحباً ' . $this->user->name . '!')
             ->line('شكراً لتسجيلك في منصتنا.')
             ->line('يمكنك الآن استكشاف الفعاليات والبدء في شراء التذاكر.')
-            ->action('استكشف الفعاليات', url('/events'))
+            ->action('استكشف الفعاليات', url('/attendee/events'))
             ->line('شكراً لاستخدامك منصتنا!');
     }
 
