@@ -37,6 +37,11 @@ class OrderItem extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    public function getPriceAttribute()
+{
+    return $this->ticketType->price;
+}
+
     // طرق مساعدة
     public function getTotalAttribute(): float
     {
