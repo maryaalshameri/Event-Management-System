@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('ticket_types', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
-            $table->enum('type', ['regular', 'vip', 'premium']);
+            $table->enum('name', ['regular', 'vip', 'premium']);
             $table->decimal('price', 10, 2)->default(0);
             $table->unsignedInteger('quantity')->default(0); // الكمية الكاملة
+             $table->integer('available')->default(0);
+            $table->text('description')->nullable();
             $table->unsignedInteger('sold')->default(0); // مبيعات
+           
             $table->timestamps();
         });
     }
