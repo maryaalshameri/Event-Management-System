@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage; // ✅ أضف هذا الاستيراد
 
 class Event extends Model
 {
-use HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-protected $fillable = [
+    protected $fillable = [
         'organizer_id',
         'title',
         'description',
@@ -22,20 +24,30 @@ protected $fillable = [
         'longitude',
         'capacity',
         'category',
-        'available_seats',
         'price',
         'image',
         'status',
     ];
 
-    protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
-        'latitude' => 'decimal:8',
-        'longitude' => 'decimal:8',
-        'price' => 'decimal:2',
-    ];
+    // ✅ إصلاح: إزالة casts مؤقتاً للتحقق من المشكلة
+    // protected $casts = [
+    //     'start_date' => 'datetime',
+    //     'end_date' => 'datetime',
+    //     'latitude' => 'decimal:8',
+    //     'longitude' => 'decimal:8',
+    //     'price' => 'decimal:2',
+    // ];
+   protected $appends = ['image_url'];
 
+   public function getImageUrlAttribute()
+        {
+            if ($this->image) {
+                // ✅ استخدم asset() بدلاً من url() أو Storage::url()
+                // return asset('storage/' . $this->image);
+                return Storage::url($this->image);
+            }
+            return null;
+        }
     // العلاقات
     public function organizer(): BelongsTo
     {
@@ -81,18 +93,18 @@ protected $fillable = [
 
     public function isSoldOut(): bool
     {
-        return $this->available_seats <= 0;
+        return $this->capacity <= 0;
     }
 
     public function decreaseAvailableSeats(int $quantity): void
     {
-        $this->available_seats -= $quantity;
+        $this->capacity -= $quantity;
         $this->save();
     }
 
     public function increaseAvailableSeats(int $quantity): void
     {
-        $this->available_seats += $quantity;
+        $this->capacity += $quantity;
         $this->save();
     }
 }

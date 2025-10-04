@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough; //
+
 class Order extends Model
 {
     use HasFactory, Notifiable;
@@ -23,6 +25,19 @@ class Order extends Model
         'total_amount' => 'decimal:2',
     ];
 
+
+     public function tickets(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Ticket::class, 
+            OrderItem::class,
+            'order_id', // Foreign key on OrderItem table
+            'order_item_id', // Foreign key on Ticket table  
+            'id', // Local key on Order table
+            'id' // Local key on OrderItem table
+        );
+    }
+
     // العلاقات
     public function user(): BelongsTo
     {
@@ -39,10 +54,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function tickets(): HasManyThrough
-    {
-        return $this->hasManyThrough(Ticket::class, OrderItem::class);
-    }
+    // public function tickets(): HasManyThrough
+    // {
+    //     return $this->hasManyThrough(Ticket::class, OrderItem::class);
+    // }
 
     // نطاقات الاستعلام (Scopes)
     public function scopeConfirmed($query)

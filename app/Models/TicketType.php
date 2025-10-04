@@ -7,16 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class TicketType extends Model
 {
-
-     use HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'event_id',
-        'type',
+        'name', // غيرت من type إلى name
         'price',
         'quantity',
+        'available', // تأكد من وجوده
+        'description', // تأكد من وجوده
         'sold',
     ];
 
@@ -24,7 +26,6 @@ class TicketType extends Model
         'price' => 'decimal:2',
     ];
 
-    // العلاقات
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -35,7 +36,6 @@ class TicketType extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    // طرق مساعدة
     public function getAvailableQuantityAttribute(): int
     {
         return $this->quantity - $this->sold;
@@ -49,13 +49,14 @@ class TicketType extends Model
     public function increaseSold(int $quantity): void
     {
         $this->sold += $quantity;
+        $this->available = $this->quantity - $this->sold; // تحديث available أيضاً
         $this->save();
     }
 
     public function decreaseSold(int $quantity): void
     {
         $this->sold -= $quantity;
+        $this->available = $this->quantity - $this->sold; // تحديث available أيضاً
         $this->save();
     }
-
 }

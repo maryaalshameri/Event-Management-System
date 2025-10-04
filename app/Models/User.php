@@ -3,7 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable , HasApiTokens;
+    use HasFactory,  Notifiable, Notifiable , HasApiTokens;
 
  protected $fillable = [
         'name','email','password','role','phone','address','avatar'
@@ -25,7 +25,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
+        public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+    }
 
     public function events(): HasMany
     {
@@ -41,6 +44,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function attendingEvents()
+{
+    return $this->hasManyThrough(Event::class, Order::class, 'user_id', 'id', 'id', 'event_id')
+        ->where('orders.status', 'confirmed');
+}
 
     // نطاقات الاستعلام (Scopes)
     public function scopeOrganizers($query)
@@ -73,4 +82,19 @@ class User extends Authenticatable
     {
         return $this->role === 'attendee';
     }
+
+
+
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmailNotification());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
+
+    
 }
